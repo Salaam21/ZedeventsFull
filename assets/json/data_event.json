@@ -1,0 +1,524 @@
+[
+  {
+    "id": "001",
+    "title": "Summer Music Festival 2024",
+    "image": "https://images.unsplash.com/photo-1459749411175-04bf5292ceea?w=800",
+    "date": "15 Jul",
+    "location": "Central Park, New York",
+    "description": "Join us for the biggest summer music festival featuring top artists from around the world. Experience live performances, food trucks, and amazing vibes. This three-day festival brings together music lovers for an unforgettable experience.",
+    "category": "music",
+    "startTime": "14:00",
+    "endTime": "23:00",
+    "isOnline": false,
+    "capacity": 5000,
+    "attendees": 3420,
+    "isFeatured": true,
+    "tags": ["music", "festival", "outdoor", "summer"],
+    "organizer": {
+      "id": "org_001",
+      "name": "EventPro Inc.",
+      "email": "contact@eventpro.com",
+      "phone": "+1-234-567-8900",
+      "profileImage": "https://images.unsplash.com/photo-1560250097-0b93528c311a?w=200",
+      "description": "Premier event organizers with 10+ years of experience",
+      "rating": 4.8,
+      "eventsHosted": 150
+    },
+    "tickets": [
+      {
+        "id": "ticket_001_1",
+        "type": "earlyBird",
+        "price": 75,
+        "totalAvailable": 1000,
+        "sold": 950,
+        "currency": "USD"
+      },
+      {
+        "id": "ticket_001_2",
+        "type": "regular",
+        "price": 100,
+        "totalAvailable": 3000,
+        "sold": 2200,
+        "currency": "USD"
+      },
+      {
+        "id": "ticket_001_3",
+        "type": "vip",
+        "price": 250,
+        "totalAvailable": 500,
+        "sold": 270,
+        "currency": "USD"
+      }
+    ]
+  },
+  {
+    "id": "002",
+    "title": "International Auto Show",
+    "image": "https://images.unsplash.com/photo-1492144534655-ae79c964c9d7?w=800",
+    "date": "22 Aug",
+    "location": "LA Convention Center, Los Angeles",
+    "description": "The ultimate showcase of luxury cars, supercars, and the latest automotive innovations. Meet industry experts, test drive vehicles, and witness exclusive unveilings.",
+    "category": "motorShows",
+    "startTime": "10:00",
+    "endTime": "20:00",
+    "isOnline": false,
+    "capacity": 10000,
+    "attendees": 6540,
+    "isFeatured": true,
+    "tags": ["cars", "automotive", "luxury", "technology"],
+    "organizer": {
+      "id": "org_002",
+      "name": "Auto Expo Global",
+      "email": "info@autoexpoglobal.com",
+      "phone": "+1-234-567-8901",
+      "profileImage": "https://images.unsplash.com/photo-1573497019940-1c28c88b4f3e?w=200",
+      "description": "Leading automotive event organizers worldwide",
+      "rating": 4.9,
+      "eventsHosted": 89
+    },
+    "tickets": [
+      {
+        "id": "ticket_002_1",
+        "type": "regular",
+        "price": 50,
+        "totalAvailable": 8000,
+        "sold": 5200,
+        "currency": "USD"
+      },
+      {
+        "id": "ticket_002_2",
+        "type": "vip",
+        "price": 150,
+        "totalAvailable": 2000,
+        "sold": 1340,
+        "currency": "USD"
+      }
+    ]
+  },
+  {
+    "id": "003",
+    "title": "Champions League Final",
+    "image": "https://images.unsplash.com/photo-1522778119026-d647f0596c20?w=800",
+    "date": "10 Sep",
+    "location": "Wembley Stadium, London",
+    "description": "Witness football history as two giants clash in the Champions League Final. Experience the electrifying atmosphere of one of football's biggest nights.",
+    "category": "football",
+    "startTime": "20:00",
+    "endTime": "23:00",
+    "isOnline": false,
+    "capacity": 90000,
+    "attendees": 89500,
+    "isFeatured": true,
+    "tags": ["football", "sports", "championship", "soccer"],
+    "organizer": {
+      "id": "org_003",
+      "name": "UEFA Events",
+      "email": "tickets@uefa.com",
+      "phone": "+44-20-1234-5678",
+      "profileImage": "https://images.unsplash.com/photo-1519085360753-af0119f7cbe7?w=200",
+      "description": "Official UEFA event management",
+      "rating": 5.0,
+      "eventsHosted": 342
+    },
+    "tickets": [
+      {
+        "id": "ticket_003_1",
+        "type": "regular",
+        "price": 350,
+        "totalAvailable": 60000,
+        "sold": 60000,
+        "currency": "USD"
+      },
+      {
+        "id": "ticket_003_2",
+        "type": "vip",
+        "price": 1500,
+        "totalAvailable": 30000,
+        "sold": 29500,
+        "currency": "USD"
+      }
+    ]
+  },
+  {
+    "id": "004",
+    "title": "Tech Summit 2024",
+    "image": "https://images.unsplash.com/photo-1540575467063-178a50c2df87?w=800",
+    "date": "05 Oct",
+    "location": "Convention Center, San Francisco",
+    "description": "Join tech leaders, innovators, and entrepreneurs at the premier technology conference. Network, learn, and discover the latest in AI, blockchain, and more.",
+    "category": "conferences",
+    "startTime": "09:00",
+    "endTime": "18:00",
+    "isOnline": true,
+    "meetingUrl": "https://zoom.us/j/techsummit2024",
+    "capacity": 2000,
+    "attendees": 1450,
+    "isFeatured": false,
+    "tags": ["technology", "networking", "AI", "innovation"],
+    "organizer": {
+      "id": "org_004",
+      "name": "TechConf International",
+      "email": "hello@techconf.io",
+      "phone": "+1-415-555-0123",
+      "profileImage": "https://images.unsplash.com/photo-1556157382-97eda2d62296?w=200",
+      "description": "Organizing world-class tech conferences since 2010",
+      "rating": 4.7,
+      "eventsHosted": 67
+    },
+    "tickets": [
+      {
+        "id": "ticket_004_1",
+        "type": "earlyBird",
+        "price": 299,
+        "totalAvailable": 500,
+        "sold": 500,
+        "currency": "USD"
+      },
+      {
+        "id": "ticket_004_2",
+        "type": "regular",
+        "price": 499,
+        "totalAvailable": 1200,
+        "sold": 850,
+        "currency": "USD"
+      },
+      {
+        "id": "ticket_004_3",
+        "type": "vip",
+        "price": 999,
+        "totalAvailable": 300,
+        "sold": 100,
+        "currency": "USD"
+      }
+    ]
+  },
+  {
+    "id": "005",
+    "title": "Rooftop House Party",
+    "image": "https://images.unsplash.com/photo-1519671482749-fd09be7ccebf?w=800",
+    "date": "28 Jun",
+    "location": "Downtown Loft, Miami",
+    "description": "Epic rooftop house party with DJ sets, cocktails, and stunning city views. Dress code: stylish casual. Limited capacity for an intimate experience.",
+    "category": "parties",
+    "startTime": "21:00",
+    "endTime": "03:00",
+    "isOnline": false,
+    "capacity": 150,
+    "attendees": 120,
+    "isFeatured": false,
+    "tags": ["party", "nightlife", "rooftop", "DJ"],
+    "organizer": {
+      "id": "org_005",
+      "name": "Night Life Miami",
+      "email": "party@nightlifemiami.com",
+      "phone": "+1-305-123-4567",
+      "profileImage": "https://images.unsplash.com/photo-1507003211169-0a1dd7228f2d?w=200",
+      "description": "Miami's premier party organizers",
+      "rating": 4.5,
+      "eventsHosted": 234
+    },
+    "tickets": [
+      {
+        "id": "ticket_005_1",
+        "type": "regular",
+        "price": 50,
+        "totalAvailable": 100,
+        "sold": 85,
+        "currency": "USD"
+      },
+      {
+        "id": "ticket_005_2",
+        "type": "vip",
+        "price": 100,
+        "totalAvailable": 50,
+        "sold": 35,
+        "currency": "USD"
+      }
+    ]
+  },
+  {
+    "id": "006",
+    "title": "Jazz Night Under The Stars",
+    "image": "https://images.unsplash.com/photo-1415201364774-f6f0bb35f28f?w=800",
+    "date": "12 Jul",
+    "location": "Botanical Gardens, Chicago",
+    "description": "An enchanting evening of smooth jazz featuring renowned artists in a beautiful outdoor setting. Bring your blanket and enjoy wine and cheese.",
+    "category": "concerts",
+    "startTime": "19:00",
+    "endTime": "22:00",
+    "isOnline": false,
+    "capacity": 800,
+    "attendees": 620,
+    "isFeatured": true,
+    "tags": ["jazz", "music", "outdoor", "romantic"],
+    "organizer": {
+      "id": "org_006",
+      "name": "Chicago Arts Council",
+      "email": "info@chicagoarts.org",
+      "phone": "+1-312-555-7890",
+      "profileImage": "https://images.unsplash.com/photo-1438761681033-6461ffad8d80?w=200",
+      "description": "Promoting arts and culture in Chicago",
+      "rating": 4.9,
+      "eventsHosted": 445
+    },
+    "tickets": [
+      {
+        "id": "ticket_006_1",
+        "type": "regular",
+        "price": 45,
+        "totalAvailable": 600,
+        "sold": 480,
+        "currency": "USD"
+      },
+      {
+        "id": "ticket_006_2",
+        "type": "vip",
+        "price": 95,
+        "totalAvailable": 200,
+        "sold": 140,
+        "currency": "USD"
+      }
+    ]
+  },
+  {
+    "id": "007",
+    "title": "NBA Finals Game 7",
+    "image": "https://images.unsplash.com/photo-1546519638-68e109498ffc?w=800",
+    "date": "18 Jun",
+    "location": "Madison Square Garden, New York",
+    "description": "The ultimate showdown! Game 7 of the NBA Finals. Witness basketball greatness as teams battle for the championship trophy.",
+    "category": "sports",
+    "startTime": "20:30",
+    "endTime": "23:30",
+    "isOnline": false,
+    "capacity": 20000,
+    "attendees": 20000,
+    "isFeatured": true,
+    "tags": ["basketball", "NBA", "sports", "finals"],
+    "organizer": {
+      "id": "org_007",
+      "name": "NBA Events",
+      "email": "tickets@nba.com",
+      "phone": "+1-212-465-6000",
+      "profileImage": "https://images.unsplash.com/photo-1500648767791-00dcc994a43e?w=200",
+      "description": "Official NBA event management",
+      "rating": 5.0,
+      "eventsHosted": 1205
+    },
+    "tickets": [
+      {
+        "id": "ticket_007_1",
+        "type": "regular",
+        "price": 500,
+        "totalAvailable": 15000,
+        "sold": 15000,
+        "currency": "USD"
+      },
+      {
+        "id": "ticket_007_2",
+        "type": "vip",
+        "price": 2500,
+        "totalAvailable": 5000,
+        "sold": 5000,
+        "currency": "USD"
+      }
+    ]
+  },
+  {
+    "id": "008",
+    "title": "Street Food Festival",
+    "image": "https://images.unsplash.com/photo-1555939594-58d7cb561ad1?w=800",
+    "date": "25 Aug",
+    "location": "Waterfront Park, Seattle",
+    "description": "Taste amazing street food from around the world! Over 100 food vendors, live cooking demos, and entertainment. A food lover's paradise.",
+    "category": "festivals",
+    "startTime": "11:00",
+    "endTime": "21:00",
+    "isOnline": false,
+    "capacity": 15000,
+    "attendees": 8900,
+    "isFeatured": false,
+    "tags": ["food", "festival", "culinary", "family-friendly"],
+    "organizer": {
+      "id": "org_008",
+      "name": "Seattle Food Events",
+      "email": "hello@seattlefood.com",
+      "phone": "+1-206-555-1234",
+      "profileImage": "https://images.unsplash.com/photo-1492562080023-ab3db95bfbce?w=200",
+      "description": "Celebrating Seattle's diverse food culture",
+      "rating": 4.6,
+      "eventsHosted": 78
+    },
+    "tickets": [
+      {
+        "id": "ticket_008_1",
+        "type": "free",
+        "price": 0,
+        "totalAvailable": 15000,
+        "sold": 8900,
+        "currency": "USD"
+      }
+    ]
+  },
+  {
+    "id": "009",
+    "title": "Art Gallery Opening",
+    "image": "https://images.unsplash.com/photo-1531243269054-5ebf6f34081e?w=800",
+    "date": "03 Sep",
+    "location": "Modern Art Museum, Boston",
+    "description": "Opening night of 'Contemporary Visions' - featuring emerging artists. Meet the artists, enjoy cocktails, and be the first to see these groundbreaking works.",
+    "category": "exhibitions",
+    "startTime": "18:00",
+    "endTime": "22:00",
+    "isOnline": false,
+    "capacity": 300,
+    "attendees": 245,
+    "isFeatured": false,
+    "tags": ["art", "gallery", "culture", "opening"],
+    "organizer": {
+      "id": "org_009",
+      "name": "Modern Art Museum",
+      "email": "events@modernartmuseum.org",
+      "phone": "+1-617-555-4321",
+      "profileImage": "https://images.unsplash.com/photo-1580489944761-15a19d654956?w=200",
+      "description": "Boston's leading contemporary art institution",
+      "rating": 4.8,
+      "eventsHosted": 156
+    },
+    "tickets": [
+      {
+        "id": "ticket_009_1",
+        "type": "regular",
+        "price": 25,
+        "totalAvailable": 250,
+        "sold": 200,
+        "currency": "USD"
+      },
+      {
+        "id": "ticket_009_2",
+        "type": "vip",
+        "price": 75,
+        "totalAvailable": 50,
+        "sold": 45,
+        "currency": "USD"
+      }
+    ]
+  },
+  {
+    "id": "010",
+    "title": "Digital Marketing Workshop",
+    "image": "https://images.unsplash.com/photo-1552664730-d307ca884978?w=800",
+    "date": "14 Sep",
+    "location": "Co-Working Space, Austin",
+    "description": "Learn cutting-edge digital marketing strategies from industry experts. Hands-on sessions covering SEO, social media, and content marketing. Limited seats!",
+    "category": "workshops",
+    "startTime": "10:00",
+    "endTime": "17:00",
+    "isOnline": true,
+    "meetingUrl": "https://zoom.us/j/digitalmarketing2024",
+    "capacity": 50,
+    "attendees": 38,
+    "isFeatured": false,
+    "tags": ["marketing", "education", "workshop", "business"],
+    "organizer": {
+      "id": "org_010",
+      "name": "Digital Growth Academy",
+      "email": "learn@digitalgrowth.com",
+      "phone": "+1-512-555-6789",
+      "profileImage": "https://images.unsplash.com/photo-1472099645785-5658abf4ff4e?w=200",
+      "description": "Empowering entrepreneurs with digital skills",
+      "rating": 4.7,
+      "eventsHosted": 92
+    },
+    "tickets": [
+      {
+        "id": "ticket_010_1",
+        "type": "regular",
+        "price": 149,
+        "totalAvailable": 50,
+        "sold": 38,
+        "currency": "USD"
+      }
+    ]
+  },
+  {
+    "id": "011",
+    "title": "Cultural Dance Festival",
+    "image": "https://images.unsplash.com/photo-1518834107812-67b0b7c58434?w=800",
+    "date": "20 Jul",
+    "location": "City Plaza, Houston",
+    "description": "Celebrate diversity through dance! Experience traditional and contemporary performances from cultures around the world. Free family event with workshops.",
+    "category": "cultural",
+    "startTime": "15:00",
+    "endTime": "21:00",
+    "isOnline": false,
+    "capacity": 5000,
+    "attendees": 3200,
+    "isFeatured": true,
+    "tags": ["culture", "dance", "diversity", "family"],
+    "organizer": {
+      "id": "org_011",
+      "name": "Houston Cultural Center",
+      "email": "info@houstoncultural.org",
+      "phone": "+1-713-555-2345",
+      "profileImage": "https://images.unsplash.com/photo-1567532939604-b6b5b0db2604?w=200",
+      "description": "Promoting cultural awareness and diversity",
+      "rating": 4.9,
+      "eventsHosted": 267
+    },
+    "tickets": [
+      {
+        "id": "ticket_011_1",
+        "type": "free",
+        "price": 0,
+        "totalAvailable": 5000,
+        "sold": 3200,
+        "currency": "USD"
+      }
+    ]
+  },
+  {
+    "id": "012",
+    "title": "Rock Concert: The Legends",
+    "image": "https://images.unsplash.com/photo-1501281668745-f7f57925c3b4?w=800",
+    "date": "30 Sep",
+    "location": "Arena Stadium, Las Vegas",
+    "description": "An epic rock concert featuring legendary bands reuniting for one night only. Experience classic rock anthems live with spectacular stage production.",
+    "category": "concerts",
+    "startTime": "19:00",
+    "endTime": "23:00",
+    "isOnline": false,
+    "capacity": 18000,
+    "attendees": 16800,
+    "isFeatured": true,
+    "tags": ["rock", "music", "concert", "legends"],
+    "organizer": {
+      "id": "org_012",
+      "name": "Live Nation Vegas",
+      "email": "tickets@livenationvegas.com",
+      "phone": "+1-702-555-9999",
+      "profileImage": "https://images.unsplash.com/photo-1519085360753-af0119f7cbe7?w=200",
+      "description": "Las Vegas premier concert promoter",
+      "rating": 4.8,
+      "eventsHosted": 523
+    },
+    "tickets": [
+      {
+        "id": "ticket_012_1",
+        "type": "regular",
+        "price": 125,
+        "totalAvailable": 12000,
+        "sold": 11500,
+        "currency": "USD"
+      },
+      {
+        "id": "ticket_012_2",
+        "type": "vip",
+        "price": 350,
+        "totalAvailable": 6000,
+        "sold": 5300,
+        "currency": "USD"
+      }
+    ]
+  }
+]
