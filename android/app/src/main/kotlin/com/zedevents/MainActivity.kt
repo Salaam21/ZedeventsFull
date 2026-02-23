@@ -1,4 +1,4 @@
-package com.rrdhoi.event_app
+package com.zedevents
 
 import io.flutter.embedding.android.FlutterActivity
 

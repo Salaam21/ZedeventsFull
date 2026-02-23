@@ -17,43 +17,36 @@ class NotificationService {
     if (_initialized) return;
 
     tz.initializeTimeZones();
-
-    const AndroidInitializationSettings androidSettings = AndroidInitializationSettings('@mipmap/ic_launcher');
-    
-    const DarwinInitializationSettings iosSettings = DarwinInitializationSettings(
-      requestAlertPermission: true,
-      requestBadgePermission: true,
-      requestSoundPermission: true,
+    const initializationSettings = InitializationSettings(
+      android: AndroidInitializationSettings('@mipmap/ic_launcher'),
+      iOS: DarwinInitializationSettings(),
     );
-
-    const InitializationSettings settings = InitializationSettings(
-      android: androidSettings,
-      iOS: iosSettings,
-    );
-
-    await _notifications.initialize(
-      settings,
-      onDidReceiveNotificationResponse: _onNotificationTapped,
-    );
+    await _notifications.initialize(settings: initializationSettings);
 
     _initialized = true;
   }
 
-  void _onNotificationTapped(NotificationResponse response) {
-    // Handle notification tap
-    // Navigate to event details or relevant page
-    print('Notification tapped: ${response.payload}');
-  }
-
-  /// Request notification permissions
+  /// Request notification permissions (Android 13+)
   Future<bool> requestPermissions() async {
     if (!_initialized) await initialize();
+    return true;
+  }
 
-    final AndroidFlutterLocalNotificationsPlugin? androidPlugin =
-        _notifications.resolvePlatformSpecificImplementation<AndroidFlutterLocalNotificationsPlugin>();
-
-    final bool? granted = await androidPlugin?.requestNotificationsPermission();
-    return granted ?? false;
+  /// Show a one-off test notification so the user can verify notifications work
+  Future<void> showTestNotification() async {
+    if (!_initialized) await initialize();
+    await _notifications.show(
+      id: 999999,
+      title: 'ZedEvents test',
+      body: 'If you see this, notifications are working!',
+      notificationDetails: const NotificationDetails(
+        android: AndroidNotificationDetails(
+          'event_reminders',
+          'Event Reminders',
+          channelDescription: 'Event reminders and test notifications',
+        ),
+      ),
+    );
   }
 
   /// Show instant notification for nearby event happening now
@@ -63,26 +56,17 @@ class NotificationService {
     required String eventId,
   }) async {
     if (!_initialized) await initialize();
-
-    const AndroidNotificationDetails androidDetails = AndroidNotificationDetails(
-      'nearby_events',
-      'Nearby Events',
-      channelDescription: 'Notifications for events happening near you',
-      importance: Importance.high,
-      priority: Priority.high,
-      icon: '@mipmap/ic_launcher',
-    );
-
-    const NotificationDetails details = NotificationDetails(
-      android: androidDetails,
-      iOS: DarwinNotificationDetails(),
-    );
-
     await _notifications.show(
-      eventId.hashCode,
-      '🎉 Event Happening Now!',
-      '$eventTitle at $location - Tap to view details',
-      details,
+      id: eventId.hashCode,
+      title: 'Event Happening Now',
+      body: '$eventTitle at $location',
+      notificationDetails: const NotificationDetails(
+        android: AndroidNotificationDetails(
+          'nearby_events',
+          'Nearby Events',
+          channelDescription: 'Nearby event alerts',
+        ),
+      ),
       payload: eventId,
     );
   }
@@ -94,26 +78,17 @@ class NotificationService {
     required String eventId,
   }) async {
     if (!_initialized) await initialize();
-
-    const AndroidNotificationDetails androidDetails = AndroidNotificationDetails(
-      'event_reminders',
-      'Event Reminders',
-      channelDescription: 'Reminders for upcoming events',
-      importance: Importance.high,
-      priority: Priority.high,
-      icon: '@mipmap/ic_launcher',
-    );
-
-    const NotificationDetails details = NotificationDetails(
-      android: androidDetails,
-      iOS: DarwinNotificationDetails(),
-    );
-
     await _notifications.show(
-      eventId.hashCode + 1000, // Different ID for reminder
-      '⏰ Event Starting Soon!',
-      '$eventTitle starts in $timeUntilStart',
-      details,
+      id: eventId.hashCode + 1000,
+      title: 'Event Starting Soon',
+      body: '$eventTitle starts in $timeUntilStart',
+      notificationDetails: const NotificationDetails(
+        android: AndroidNotificationDetails(
+          'event_reminders',
+          'Event Reminders',
+          channelDescription: 'Upcoming event reminders',
+        ),
+      ),
       payload: eventId,
     );
   }
@@ -134,28 +109,19 @@ class NotificationService {
       return;
     }
 
-    const AndroidNotificationDetails androidDetails = AndroidNotificationDetails(
-      'event_reminders',
-      'Event Reminders',
-      channelDescription: 'Reminders for your upcoming events',
-      importance: Importance.high,
-      priority: Priority.high,
-      icon: '@mipmap/ic_launcher',
-    );
-
-    const NotificationDetails details = NotificationDetails(
-      android: androidDetails,
-      iOS: DarwinNotificationDetails(),
-    );
-
     await _notifications.zonedSchedule(
-      event.id.hashCode,
-      '⏰ Event Reminder',
-      '${event.title} starts in ${_formatDuration(beforeEvent)}',
-      tz.TZDateTime.from(notificationTime, tz.local),
-      details,
+      id: event.id.hashCode,
+      title: 'Event Reminder',
+      body: '${event.title} starts in ${_formatDuration(beforeEvent)}',
+      scheduledDate: tz.TZDateTime.from(notificationTime, tz.local),
+      notificationDetails: const NotificationDetails(
+        android: AndroidNotificationDetails(
+          'event_reminders',
+          'Event Reminders',
+          channelDescription: 'Scheduled event reminders',
+        ),
+      ),
       androidScheduleMode: AndroidScheduleMode.exactAllowWhileIdle,
-      uiLocalNotificationDateInterpretation: UILocalNotificationDateInterpretation.absoluteTime,
       payload: event.id,
     );
   }
@@ -188,33 +154,24 @@ class NotificationService {
     required String eventId,
   }) async {
     if (!_initialized) await initialize();
-
-    const AndroidNotificationDetails androidDetails = AndroidNotificationDetails(
-      'new_events',
-      'New Events',
-      channelDescription: 'Notifications for new events matching your interests',
-      importance: Importance.defaultImportance,
-      priority: Priority.defaultPriority,
-      icon: '@mipmap/ic_launcher',
-    );
-
-    const NotificationDetails details = NotificationDetails(
-      android: androidDetails,
-      iOS: DarwinNotificationDetails(),
-    );
-
     await _notifications.show(
-      eventId.hashCode + 2000,
-      '✨ New $category Event',
-      eventTitle,
-      details,
+      id: eventId.hashCode + 2000,
+      title: 'New $category Event',
+      body: eventTitle,
+      notificationDetails: const NotificationDetails(
+        android: AndroidNotificationDetails(
+          'new_events',
+          'New Events',
+          channelDescription: 'New events for your interests',
+        ),
+      ),
       payload: eventId,
     );
   }
 
   /// Cancel specific notification
   Future<void> cancelNotification(String eventId) async {
-    await _notifications.cancel(eventId.hashCode);
+    await _notifications.cancel(id: eventId.hashCode);
   }
 
   /// Cancel all notifications

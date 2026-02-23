@@ -41,7 +41,7 @@
 **Error:** "Namespace not specified. Specify a namespace in the module's build file"
 
 **Fix Applied:**
-- Added `namespace "com.rrdhoi.event_app"` to android block
+- Added `namespace "com.zedevents"` to android block
 
 **File:** `android/app/build.gradle` - Line 31
 

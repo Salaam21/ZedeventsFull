@@ -55,7 +55,7 @@ class TicketModel {
     required this.price,
     required this.totalAvailable,
     required this.sold,
-    this.currency = 'USD',
+    this.currency = 'ZMW',
   });
 
   int get available => totalAvailable - sold;
@@ -70,7 +70,7 @@ class TicketModel {
         price: (json["price"] ?? 0).toDouble(),
         totalAvailable: json["totalAvailable"] ?? 0,
         sold: json["sold"] ?? 0,
-        currency: json["currency"] ?? "USD",
+        currency: json["currency"] ?? "ZMW",
       );
 
   Map<String, dynamic> toJson() => {

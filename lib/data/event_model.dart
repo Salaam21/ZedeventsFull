@@ -27,6 +27,7 @@ class EventModel {
     this.attendees = 0,
     this.isFeatured = false,
     this.createdAt,
+    this.imageUrls,
   });
 
   String id;
@@ -49,6 +50,8 @@ class EventModel {
   int attendees;
   bool isFeatured;
   DateTime? createdAt;
+  /// When set, used for gallery carousel; otherwise [image] is used.
+  List<String>? imageUrls;
 
   static Future<String> getJson() {
     return rootBundle.loadString('assets/json/data_event.json');
@@ -81,6 +84,9 @@ class EventModel {
     return tickets.every((ticket) => ticket.price == 0);
   }
 
+  /// Image URLs for gallery carousel. Uses imageUrls if set, else [image].
+  List<String> get images => (imageUrls != null && imageUrls!.isNotEmpty) ? imageUrls! : [image];
+
   factory EventModel.fromRawJson(String str) =>
       EventModel.fromJson(json.decode(str));
 
@@ -111,8 +117,8 @@ class EventModel {
       category: EventCategoryExtension.fromString(json["category"] ?? "other"),
       organizer: OrganizerModel.fromJson(json["organizer"] ?? {}),
       tickets: ticketList,
-      latitude: json["latitude"]?.toDouble(),
-      longitude: json["longitude"]?.toDouble(),
+      latitude: (json["latitude"] as num?)?.toDouble(),
+      longitude: (json["longitude"] as num?)?.toDouble(),
       capacity: json["capacity"],
       startTime: json["startTime"],
       endTime: json["endTime"],
@@ -123,6 +129,9 @@ class EventModel {
       isFeatured: json["isFeatured"] ?? false,
       createdAt: json["createdAt"] != null
           ? DateTime.parse(json["createdAt"])
+          : null,
+      imageUrls: json["images"] != null
+          ? List<String>.from(json["images"] as List)
           : null,
     );
   }
@@ -148,5 +157,6 @@ class EventModel {
         "attendees": attendees,
         "isFeatured": isFeatured,
         "createdAt": createdAt?.toIso8601String(),
+        if (imageUrls != null) "images": imageUrls,
       };
 }
