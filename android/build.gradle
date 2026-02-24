@@ -22,6 +22,16 @@ rootProject.buildDir = '../build'
 subprojects {
     project.buildDir = "${rootProject.buildDir}/${project.name}"
 }
+// Force all Kotlin modules to use JVM 17 so they match the app (fixes add_2_calendar etc.)
+subprojects { subproject ->
+    subproject.afterEvaluate {
+        if (subproject.plugins.hasPlugin('kotlin-android')) {
+            subproject.tasks.withType(org.jetbrains.kotlin.gradle.tasks.KotlinCompile).configureEach {
+                kotlinOptions.jvmTarget = "17"
+            }
+        }
+    }
+}
 subprojects {
     project.evaluationDependsOn(':app')
 }

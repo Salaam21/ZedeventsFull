@@ -1,23 +1,24 @@
 import 'package:event_app/app/configs/colors.dart';
 import 'package:event_app/services/location_service.dart';
 import 'package:flutter/material.dart';
-import 'package:google_maps_flutter/google_maps_flutter.dart';
+import 'package:flutter_map/flutter_map.dart';
+import 'package:latlong2/latlong.dart';
 import 'package:geolocator/geolocator.dart';
 
 class LocationPicker extends StatefulWidget {
   final Function(double lat, double lng, String address) onLocationSelected;
 
   const LocationPicker({
-    Key? key,
+    super.key,
     required this.onLocationSelected,
-  }) : super(key: key);
+  });
 
   @override
   State<LocationPicker> createState() => _LocationPickerState();
 }
 
 class _LocationPickerState extends State<LocationPicker> {
-  GoogleMapController? _mapController;
+  final MapController _mapController = MapController();
   final LocationService _locationService = LocationService();
   LatLng _selectedLocation = const LatLng(-15.4167, 28.2833); // Lusaka, Zambia
   bool _isLoading = false;
@@ -30,18 +31,16 @@ class _LocationPickerState extends State<LocationPicker> {
 
   Future<void> _getCurrentLocation() async {
     setState(() => _isLoading = true);
-    
+
     Position? position = await _locationService.getCurrentLocation();
-    
+
     if (position != null) {
       setState(() {
         _selectedLocation = LatLng(position.latitude, position.longitude);
         _isLoading = false;
       });
-      
-      _mapController?.animateCamera(
-        CameraUpdate.newLatLng(_selectedLocation),
-      );
+
+      _mapController.move(_selectedLocation, 15);
     } else {
       setState(() => _isLoading = false);
     }
@@ -56,11 +55,10 @@ class _LocationPickerState extends State<LocationPicker> {
         actions: [
           TextButton(
             onPressed: () {
-              // Return selected location
               widget.onLocationSelected(
                 _selectedLocation.latitude,
                 _selectedLocation.longitude,
-                'Selected Location', // You can add geocoding here
+                'Selected Location',
               );
               Navigator.pop(context);
             },
@@ -73,33 +71,36 @@ class _LocationPickerState extends State<LocationPicker> {
       ),
       body: Stack(
         children: [
-          GoogleMap(
-            initialCameraPosition: CameraPosition(
-              target: _selectedLocation,
-              zoom: 15,
-            ),
-            onMapCreated: (controller) {
-              _mapController = controller;
-            },
-            onTap: (position) {
-              setState(() {
-                _selectedLocation = position;
-              });
-            },
-            markers: {
-              Marker(
-                markerId: const MarkerId('selected_location'),
-                position: _selectedLocation,
-                draggable: true,
-                onDragEnd: (newPosition) {
-                  setState(() {
-                    _selectedLocation = newPosition;
-                  });
-                },
+          FlutterMap(
+            mapController: _mapController,
+            options: MapOptions(
+              initialCenter: _selectedLocation,
+              initialZoom: 15,
+              onTap: (_, point) => setState(() => _selectedLocation = point),
+              interactionOptions: const InteractionOptions(
+                flags: InteractiveFlag.all,
               ),
-            },
-            myLocationEnabled: true,
-            myLocationButtonEnabled: true,
+            ),
+            children: [
+              TileLayer(
+                urlTemplate: 'https://tile.openstreetmap.org/{z}/{x}/{y}.png',
+                userAgentPackageName: 'com.example.event_app',
+              ),
+              MarkerLayer(
+                markers: [
+                  Marker(
+                    point: _selectedLocation,
+                    width: 40,
+                    height: 40,
+                    child: const Icon(
+                      Icons.place,
+                      color: AppColors.primaryColor,
+                      size: 40,
+                    ),
+                  ),
+                ],
+              ),
+            ],
           ),
           if (_isLoading)
             const Center(
@@ -148,11 +149,4 @@ class _LocationPickerState extends State<LocationPicker> {
       ),
     );
   }
-
-  @override
-  void dispose() {
-    _mapController?.dispose();
-    super.dispose();
-  }
 }
-

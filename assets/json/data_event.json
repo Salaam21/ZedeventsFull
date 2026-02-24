@@ -385,8 +385,8 @@
     "capacity": 50000,
     "attendees": 0,
     "isFeatured": true,
-    "latitude": -15.3875,
-    "longitude": 28.3228,
+    "latitude": -15.369507,
+    "longitude": 28.272641,
     "tags": ["football", "zambia", "super league", "lusaka", "derby"],
     "organizer": {
       "id": "org_zm_009",
@@ -483,8 +483,8 @@
     "capacity": 50000,
     "attendees": 0,
     "isFeatured": true,
-    "latitude": -15.3875,
-    "longitude": 28.3228,
+    "latitude": -15.369507,
+    "longitude": 28.272641,
     "tags": ["football", "zambia", "super league", "napsa stars", "power dynamos"],
     "organizer": {
       "id": "org_zm_011",

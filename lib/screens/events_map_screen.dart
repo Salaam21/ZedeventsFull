@@ -1,12 +1,13 @@
 import 'package:flutter/material.dart';
-import 'package:google_maps_flutter/google_maps_flutter.dart';
+import 'package:flutter_map/flutter_map.dart';
+import 'package:latlong2/latlong.dart';
 import 'package:url_launcher/url_launcher.dart';
 import 'package:event_app/data/event_model.dart';
 import 'package:event_app/services/api_service.dart';
 import 'package:event_app/utils/calendar_helper.dart';
 
 /// Snapchat-style map: events appear as pins on the physical map.
-/// Tap a pin to see event card with image, details, directions, and add to calendar.
+/// Uses OpenStreetMap (free, no API key). Tap a pin to see event card.
 class EventsMapScreen extends StatefulWidget {
   const EventsMapScreen({super.key});
 
@@ -16,6 +17,7 @@ class EventsMapScreen extends StatefulWidget {
 
 class _EventsMapScreenState extends State<EventsMapScreen> {
   final ApiService _api = ApiService();
+  final MapController _mapController = MapController();
   List<EventModel> _events = [];
   EventModel? _selectedEvent;
   bool _loading = true;
@@ -36,22 +38,46 @@ class _EventsMapScreenState extends State<EventsMapScreen> {
     });
   }
 
-  Set<Marker> _buildMarkers() {
-    return {
+  List<Marker> _buildMarkers() {
+    return [
       for (final e in _events)
         Marker(
-          markerId: MarkerId(e.id),
-          position: LatLng(e.latitude!, e.longitude!),
-          infoWindow: InfoWindow(title: e.title, snippet: e.location),
-          onTap: () => setState(() => _selectedEvent = e),
+          point: LatLng(e.latitude!, e.longitude!),
+          width: 44,
+          height: 44,
+          child: GestureDetector(
+            onTap: () => setState(() => _selectedEvent = e),
+            child: Container(
+              padding: const EdgeInsets.all(6),
+              decoration: BoxDecoration(
+                color: Colors.white,
+                shape: BoxShape.circle,
+                border: Border.all(color: const Color(0xFF2196F3), width: 2),
+                boxShadow: [
+                  BoxShadow(
+                    color: Colors.black.withValues(alpha: 0.3),
+                    blurRadius: 6,
+                    offset: const Offset(0, 2),
+                  ),
+                ],
+              ),
+              child: const Icon(
+                Icons.event,
+                color: Color(0xFF2196F3),
+                size: 24,
+              ),
+            ),
+          ),
         ),
-    };
+    ];
   }
 
   Future<void> _openDirections(EventModel event) async {
     if (event.latitude == null || event.longitude == null) return;
+    final lat = event.latitude!.toStringAsFixed(6);
+    final lng = event.longitude!.toStringAsFixed(6);
     final url = Uri.parse(
-      'https://www.google.com/maps/dir/?api=1&destination=${event.latitude},${event.longitude}&travelmode=driving',
+      'https://www.google.com/maps/dir/?api=1&destination=$lat,$lng&travelmode=driving',
     );
     if (await canLaunchUrl(url)) {
       await launchUrl(url, mode: LaunchMode.externalApplication);
@@ -78,34 +104,53 @@ class _EventsMapScreenState extends State<EventsMapScreen> {
           : SizedBox.expand(
               child: Stack(
                 children: [
-                  Container(
-                    color: Colors.grey.shade300,
-                    child: GoogleMap(
-                      initialCameraPosition: const CameraPosition(target: _zambiaCenter, zoom: 6),
-                      markers: _buildMarkers(),
-                      myLocationEnabled: true,
-                      mapType: MapType.normal,
-                      onTap: (_) => setState(() => _selectedEvent = null),
-                      onMapCreated: (_) => setState(() {}),
+                  FlutterMap(
+                    mapController: _mapController,
+                    options: MapOptions(
+                      initialCenter: _zambiaCenter,
+                      initialZoom: 6,
+                      onTap: (_, __) => setState(() => _selectedEvent = null),
+                      interactionOptions: const InteractionOptions(
+                        flags: InteractiveFlag.all,
+                      ),
                     ),
+                    children: [
+                      TileLayer(
+                        urlTemplate: 'https://tile.openstreetmap.org/{z}/{x}/{y}.png',
+                        userAgentPackageName: 'com.example.event_app',
+                      ),
+                      MarkerLayer(markers: _buildMarkers()),
+                    ],
                   ),
                   Positioned(
-                  top: 8,
-                  left: 12,
-                  right: 12,
-                  child: Material(
-                    elevation: 2,
-                    borderRadius: BorderRadius.circular(12),
-                    child: Padding(
-                      padding: const EdgeInsets.symmetric(horizontal: 12, vertical: 8),
-                      child: Text(
-                        'Tap a pin to see what\'s on',
-                        style: TextStyle(fontSize: 13, color: Colors.grey.shade700),
+                    top: 8,
+                    left: 12,
+                    right: 12,
+                    child: Material(
+                      elevation: 2,
+                      borderRadius: BorderRadius.circular(12),
+                      child: Padding(
+                        padding: const EdgeInsets.symmetric(horizontal: 12, vertical: 8),
+                        child: Row(
+                          children: [
+                            Text(
+                              '${_events.length} events on map',
+                              style: TextStyle(
+                                fontSize: 13,
+                                fontWeight: FontWeight.w600,
+                                color: Colors.grey.shade800,
+                              ),
+                            ),
+                            Text(
+                              ' • Tap a pin to see details',
+                              style: TextStyle(fontSize: 13, color: Colors.grey.shade700),
+                            ),
+                          ],
+                        ),
                       ),
                     ),
                   ),
-                ),
-                if (_selectedEvent != null) _buildEventCard(_selectedEvent!),
+                  if (_selectedEvent != null) _buildEventCard(_selectedEvent!),
                 ],
               ),
             ),
@@ -322,7 +367,7 @@ class _EventsMapScreenState extends State<EventsMapScreen> {
                         final added = await addEventToCalendar(e);
                         if (!ctx.mounted) return;
                         Navigator.pop(ctx);
-                        ScaffoldMessenger.of(context).showSnackBar(
+                        ScaffoldMessenger.of(ctx).showSnackBar(
                           SnackBar(
                             content: Text(added ? 'Added to calendar' : 'Could not parse date'),
                             backgroundColor: added ? Colors.green : null,

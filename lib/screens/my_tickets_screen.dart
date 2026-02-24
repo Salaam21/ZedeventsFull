@@ -1,6 +1,15 @@
-import 'package:flutter/material.dart';
+import 'dart:io';
 
-/// List of tickets the user has booked (mock + API).
+import 'package:flutter/material.dart';
+import 'package:flutter/services.dart';
+import 'package:qr_flutter/qr_flutter.dart';
+import 'package:screenshot/screenshot.dart';
+import 'package:gal/gal.dart';
+import 'package:path_provider/path_provider.dart';
+import 'package:event_app/utils/ticket_code_helper.dart';
+
+/// List of tickets the user has booked (mock + API). Each ticket has a generated
+/// code (event + audience-based) and QR code; can copy code and save ticket as image.
 class MyTicketsScreen extends StatefulWidget {
   const MyTicketsScreen({super.key});
 
@@ -19,7 +28,6 @@ class _MyTicketsScreenState extends State<MyTicketsScreen> {
   }
 
   Future<void> _loadTickets() async {
-    // In a real app, call API like _api.getMyTickets(). For now use mock.
     await Future.delayed(const Duration(milliseconds: 400));
     if (!mounted) return;
     setState(() {
@@ -31,22 +39,24 @@ class _MyTicketsScreenState extends State<MyTicketsScreen> {
   List<_BookedTicket> _mockBookedTickets() {
     return [
       _BookedTicket(
+        eventId: 'zm_001',
         eventTitle: 'Lusaka Music & Arts Festival',
         eventDate: 'Mar 15, 2025',
         venue: 'Showgrounds, Lusaka',
         ticketType: 'General Admission',
         quantity: 2,
         orderId: 'ORD-001',
-        qrPlaceholder: true,
+        expectedAudience: 6000,
       ),
       _BookedTicket(
+        eventId: 'zm_003',
         eventTitle: 'Zambia Super League Derby Night',
         eventDate: 'Mar 22, 2025',
         venue: 'Levy Mwanawasa Stadium, Ndola',
         ticketType: 'VIP',
         quantity: 1,
         orderId: 'ORD-002',
-        qrPlaceholder: true,
+        expectedAudience: 40000,
       ),
     ];
   }
@@ -160,8 +170,10 @@ class _MyTicketsScreenState extends State<MyTicketsScreen> {
                                 ),
                                 const SizedBox(height: 10),
                                 Text(
-                                  'Order ${t.orderId}',
-                                  style: TextStyle(fontSize: 12, color: Colors.grey.shade500),
+                                  'Ticket code: ${t.ticketCode}',
+                                  style: TextStyle(fontSize: 11, color: Colors.grey.shade600, fontFamily: 'monospace'),
+                                  maxLines: 1,
+                                  overflow: TextOverflow.ellipsis,
                                 ),
                               ],
                             ),
@@ -175,68 +187,185 @@ class _MyTicketsScreenState extends State<MyTicketsScreen> {
   }
 
   void _showTicketDetail(_BookedTicket t) {
+    final screenshotController = ScreenshotController();
     showModalBottomSheet(
       context: context,
       isScrollControlled: true,
+      backgroundColor: Colors.transparent,
       shape: const RoundedRectangleBorder(
         borderRadius: BorderRadius.vertical(top: Radius.circular(20)),
       ),
-      builder: (ctx) => Padding(
-        padding: const EdgeInsets.all(24),
-        child: Column(
-          mainAxisSize: MainAxisSize.min,
-          children: [
-            Container(
-              width: 48,
-              height: 4,
-              decoration: BoxDecoration(
-                color: Colors.grey.shade300,
-                borderRadius: BorderRadius.circular(2),
+      builder: (ctx) => DraggableScrollableSheet(
+        initialChildSize: 0.75,
+        minChildSize: 0.4,
+        maxChildSize: 0.95,
+        builder: (_, scrollController) => Container(
+          decoration: BoxDecoration(
+            color: Theme.of(context).scaffoldBackgroundColor,
+            borderRadius: const BorderRadius.vertical(top: Radius.circular(20)),
+          ),
+          child: ListView(
+            controller: scrollController,
+            padding: const EdgeInsets.all(24),
+            children: [
+              Center(
+                child: Container(
+                  width: 40,
+                  height: 4,
+                  decoration: BoxDecoration(
+                    color: Colors.grey.shade300,
+                    borderRadius: BorderRadius.circular(2),
+                  ),
+                ),
               ),
-            ),
-            const SizedBox(height: 20),
-            Text(t.eventTitle, style: const TextStyle(fontSize: 18, fontWeight: FontWeight.bold)),
-            const SizedBox(height: 8),
-            Text('${t.ticketType} × ${t.quantity}', style: TextStyle(color: Colors.grey.shade600)),
-            const SizedBox(height: 24),
-            Container(
-              padding: const EdgeInsets.all(24),
-              decoration: BoxDecoration(
-                border: Border.all(color: Colors.grey.shade300),
-                borderRadius: BorderRadius.circular(12),
+              const SizedBox(height: 20),
+              Text(t.eventTitle, style: const TextStyle(fontSize: 18, fontWeight: FontWeight.bold)),
+              const SizedBox(height: 4),
+              Text('${t.ticketType} × ${t.quantity}', style: TextStyle(color: Colors.grey.shade600)),
+              const SizedBox(height: 24),
+              Screenshot(
+                controller: screenshotController,
+                child: Container(
+                  padding: const EdgeInsets.all(20),
+                  decoration: BoxDecoration(
+                    color: Colors.white,
+                    borderRadius: BorderRadius.circular(16),
+                    border: Border.all(color: Colors.grey.shade300),
+                    boxShadow: [
+                      BoxShadow(
+                        color: Colors.black.withValues(alpha: 0.06),
+                        blurRadius: 12,
+                        offset: const Offset(0, 4),
+                      ),
+                    ],
+                  ),
+                  child: Column(
+                    children: [
+                      Text(t.eventTitle, style: const TextStyle(fontSize: 16, fontWeight: FontWeight.bold)),
+                      Text('${t.eventDate} · ${t.venue}', style: TextStyle(fontSize: 12, color: Colors.grey.shade700)),
+                      const SizedBox(height: 16),
+                      QrImageView(
+                        data: t.ticketCode,
+                        version: QrVersions.auto,
+                        size: 180,
+                        backgroundColor: Colors.white,
+                        eyeStyle: const QrEyeStyle(eyeShape: QrEyeShape.square, color: Colors.black),
+                        dataModuleStyle: const QrDataModuleStyle(dataModuleShape: QrDataModuleShape.square, color: Colors.black),
+                      ),
+                      const SizedBox(height: 12),
+                      Text(
+                        'Show this QR at the gate',
+                        style: TextStyle(fontSize: 13, color: Colors.grey.shade600),
+                      ),
+                      const SizedBox(height: 8),
+                      Container(
+                        padding: const EdgeInsets.symmetric(horizontal: 12, vertical: 8),
+                        decoration: BoxDecoration(
+                          color: Colors.grey.shade100,
+                          borderRadius: BorderRadius.circular(8),
+                        ),
+                        child: SelectableText(
+                          t.ticketCode,
+                          style: const TextStyle(
+                            fontSize: 14,
+                            fontWeight: FontWeight.w600,
+                            fontFamily: 'monospace',
+                          ),
+                        ),
+                      ),
+                    ],
+                  ),
+                ),
               ),
-              child: Column(
+              const SizedBox(height: 24),
+              Row(
                 children: [
-                  Icon(Icons.qr_code_2, size: 120, color: Colors.grey.shade600),
-                  const SizedBox(height: 8),
-                  Text('Show this QR at the gate', style: TextStyle(fontSize: 13, color: Colors.grey.shade600)),
+                  Expanded(
+                    child: OutlinedButton.icon(
+                      onPressed: () {
+                        Clipboard.setData(ClipboardData(text: t.ticketCode));
+                        ScaffoldMessenger.of(context).showSnackBar(
+                          const SnackBar(content: Text('Ticket code copied')),
+                        );
+                      },
+                      icon: const Icon(Icons.copy, size: 20),
+                      label: const Text('Copy code'),
+                      style: OutlinedButton.styleFrom(
+                        padding: const EdgeInsets.symmetric(vertical: 12),
+                        shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(12)),
+                      ),
+                    ),
+                  ),
+                  const SizedBox(width: 12),
+                  Expanded(
+                    child: FilledButton.icon(
+                      onPressed: () => _saveTicketImage(screenshotController, t),
+                      icon: const Icon(Icons.save_alt, size: 20),
+                      label: const Text('Save ticket'),
+                      style: FilledButton.styleFrom(
+                        padding: const EdgeInsets.symmetric(vertical: 12),
+                        shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(12)),
+                      ),
+                    ),
+                  ),
                 ],
               ),
-            ),
-            const SizedBox(height: 24),
-          ],
+              const SizedBox(height: 16),
+            ],
+          ),
         ),
       ),
     );
   }
+
+  Future<void> _saveTicketImage(ScreenshotController controller, _BookedTicket t) async {
+    try {
+      final image = await controller.capture();
+      if (image == null || !mounted) return;
+      final dir = await getTemporaryDirectory();
+      final name = 'zedevents_ticket_${t.orderId}_${DateTime.now().millisecondsSinceEpoch}.png';
+      final file = File('${dir.path}/$name');
+      await file.writeAsBytes(image);
+      await Gal.putImage(file.path, album: 'ZedEvents');
+      if (!mounted) return;
+      ScaffoldMessenger.of(context).showSnackBar(
+        const SnackBar(content: Text('Ticket saved to gallery'), backgroundColor: Colors.green),
+      );
+    } catch (e) {
+      if (!mounted) return;
+      ScaffoldMessenger.of(context).showSnackBar(
+        SnackBar(content: Text('Could not save: $e'), backgroundColor: Colors.red),
+      );
+    }
+  }
 }
 
 class _BookedTicket {
+  final String eventId;
   final String eventTitle;
   final String eventDate;
   final String venue;
   final String ticketType;
   final int quantity;
   final String orderId;
-  final bool qrPlaceholder;
+  final int expectedAudience;
+
+  late final String ticketCode = generateTicketCode(
+    eventId: eventId,
+    eventTitle: eventTitle,
+    expectedAudience: expectedAudience,
+    orderId: orderId,
+    quantity: quantity,
+  );
 
   _BookedTicket({
+    required this.eventId,
     required this.eventTitle,
     required this.eventDate,
     required this.venue,
     required this.ticketType,
     required this.quantity,
     required this.orderId,
-    required this.qrPlaceholder,
+    required this.expectedAudience,
   });
 }

@@ -1,22 +1,24 @@
-# Show the map in ZedEvents
+# Map in ZedEvents (free – no API key)
 
-The Map tab stays blank until you add a **Google Maps API key**.
+The Map tab uses **OpenStreetMap** via the `flutter_map` package. No API key or billing is required.
 
-## Steps
+## What’s included
 
-1. Open [Google Cloud Console](https://console.cloud.google.com/).
-2. Create or select a project.
-3. Enable **Maps SDK for Android** (and **Maps SDK for iOS** if you build for iOS):  
-   APIs & Services → Library → search “Maps SDK for Android” → Enable.
-4. Create an API key:  
-   APIs & Services → Credentials → Create credentials → API key.
-5. Add the key to your project:
-   - Open **`android/local.properties`** (create it if needed).
-   - Add this line (use your real key instead of `YOUR_KEY_HERE`):
-   ```properties
-   maps.api.key=YOUR_KEY_HERE
-   ```
-6. Rebuild and run the app:  
-   `flutter run`
+- **Events map tab:** Event pins on an OSM map; tap a pin for the event card, directions, and add to calendar.
+- **Location picker:** Tap the map to choose a location when creating an event.
+- **Event location map:** Small map preview with “Get directions” (opens Google Maps or device maps app).
 
-After this, the Map tab should show the map and event pins.
+## Optional: restrict to Wi‑Fi for tiles
+
+If you want to avoid using mobile data for map tiles, you can add logic (e.g. connectivity checks) so that tiles load only on Wi‑Fi. The app does not enforce this by default.
+
+## Optional: switch back to Google Maps
+
+If you later want Google Maps again:
+
+1. Add `google_maps_flutter` to `pubspec.yaml` and remove `flutter_map` and `latlong2`.
+2. Create a Google Cloud API key and enable **Maps SDK for Android** (and iOS if needed).
+3. Put the key in `android/local.properties` as `maps.api.key=YOUR_KEY`.
+4. Revert the map screens and widgets to use `GoogleMap` and the previous setup.
+
+Current setup is **fully free** with no API key.

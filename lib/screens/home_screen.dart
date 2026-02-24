@@ -819,8 +819,10 @@ class _EventDetailModalState extends State<_EventDetailModal> {
                                     onPressed: () async {
                                       final Uri url;
                                       if (event.latitude != null && event.longitude != null) {
+                                        final lat = event.latitude!.toStringAsFixed(6);
+                                        final lng = event.longitude!.toStringAsFixed(6);
                                         url = Uri.parse(
-                                          'https://www.google.com/maps/search/?api=1&query=${event.latitude},${event.longitude}',
+                                          'https://www.google.com/maps/dir/?api=1&destination=$lat,$lng&travelmode=driving',
                                         );
                                       } else {
                                         url = Uri.parse(
